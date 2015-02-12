@@ -17,7 +17,7 @@ gem 'turbolinks'
 gem 'jbuilder', '~> 2.0'
 
 # Scraper
-gem 'nokogiri'
+gem 'nokogiri','~> 1.6.6.2'
 
 #database
 gem 'pg'
