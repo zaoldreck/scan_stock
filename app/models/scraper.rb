@@ -287,8 +287,16 @@ doc.css('table tr').each_with_index do | item , index|
   end
 end
 
-# puts hash
+puts "********************************Main Hash********************************"
+puts hash
+puts "********************************Q Hash********************************"
 puts hash_financial_q
+puts "********************************Q Last Hash********************************"
+puts hash_financial_q_last
+puts "********************************Y Hash********************************"
+puts hash_financial_y
+puts "********************************Y Last Hash********************************"
+puts hash_financial_y_last
 
 # doc.css('table tr').each_with_index do | item , index|
 #   puts index
