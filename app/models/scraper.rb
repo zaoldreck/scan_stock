@@ -3,6 +3,10 @@ require 'open-uri'
 
 head = 'table tr td table tr td'
 hash = Hash.new
+hash_financial_q = Hash.new
+hash_financial_q_last = Hash.new
+hash_financial_y = Hash.new
+hash_financial_y_last = Hash.new
 # doc = Nokogiri::HTML(open('http://www.set.or.th/set/factsheet.do?symbol=PM&language=th&country=th'))
 doc = Nokogiri::HTML(open('http://www.set.or.th/set/factsheet.do?symbol=PM&language=en&country=us'))
 hash['name'] = doc.css('table tr td table tr td.factsheet-heading2').text
@@ -14,8 +18,8 @@ doc.css('table tr').each_with_index do | item , index|
   if index==3
     item.css('td table')[1].css('tr td table').each_with_index do | item2 , index2|
       ######
-      # puts index2
-      # puts item2
+        # puts index2
+        # puts item2
       if index2 == 4
         #Company Profile
       elsif index2 == 5
@@ -177,18 +181,103 @@ doc.css('table tr').each_with_index do | item , index|
          hash['dividend'] = arrDividend
       elsif index2 == 17
         #Financial Position
+        arrName = []
+        keyName1,keyName2,keyName3,keyName4 = ''
         item2.css('tr').each_with_index do | financial_position , index_financial_position |
-          puts index_financial_position
-          puts financial_position
-          if index_financial_position == 0
-            # puts financial_position.css('td')[1].text
-            # puts financial_position.css('td')[2].text
-            # puts financial_position.css('td')[3].text
-            # puts financial_position.css('td')[4].text
-          elsif index_financial_position > 2
-
+          # puts index_financial_position
+          # puts financial_position
+          if index_financial_position > 2 && (item2.css('tr').size-1) != index_financial_position
+            arrName.push( financial_position.css('td')[0].text )
+            tempName = financial_position.css('td')[0].text.strip
+            hash_financial_q[tempName] = financial_position.css('td')[1].text
+            hash_financial_q_last[tempName] = financial_position.css('td')[2].text
+            hash_financial_y[tempName] = financial_position.css('td')[3].text
+            hash_financial_y_last[tempName] = financial_position.css('td')[4].text
           end
         end
+      elsif index2 == 18
+        # Comprehensive Income
+        arrName = []
+        item2.css('tr').each_with_index do | financial_income , index_financial_income |
+          # puts index_financial_income
+          # puts financial_income
+          if index_financial_income > 2 && (item2.css('tr').size-1) != index_financial_income
+            arrName.push( financial_income.css('td')[0].text )
+            tempName = financial_income.css('td')[0].text.strip
+            hash_financial_q[tempName] = financial_income.css('td')[1].text
+            hash_financial_q_last[tempName] = financial_income.css('td')[2].text
+            hash_financial_y[tempName] = financial_income.css('td')[3].text
+            hash_financial_y_last[tempName] = financial_income.css('td')[4].text
+          end
+        end
+      elsif index2 == 19
+        # Cash Flow
+        arrName = []
+        item2.css('tr').each_with_index do | cash_flow , index_cash_flow |
+          # puts index_cash_flow
+          # puts cash_flow
+          if index_cash_flow > 2 && (item2.css('tr').size-1) != index_cash_flow
+            arrName.push( cash_flow.css('td')[0].text )
+            tempName = cash_flow.css('td')[0].text.strip
+            hash_financial_q[tempName] = cash_flow.css('td')[1].text
+            hash_financial_q_last[tempName] = cash_flow.css('td')[2].text
+            hash_financial_y[tempName] = cash_flow.css('td')[3].text
+            hash_financial_y_last[tempName] = cash_flow.css('td')[4].text
+          end
+        end
+      elsif index2 == 20
+        # Ratios
+        arrName = []
+        item2.css('tr').each_with_index do | ratios , index_ratios|
+          # puts index_ratios
+          # puts ratios
+          if index_ratios == 1
+            arrName.push( ratios.css('td')[0].text )
+            tempName = ratios.css('td')[0].text.strip
+            hash_financial_q['head'] = ratios.css('td')[1].text.gsub(/[^.\/0-9A-Za-z]/, '')
+            hash_financial_q_last['head'] = ratios.css('td')[2].text.gsub(/[^.\/0-9A-Za-z]/, '')
+            hash_financial_y['head'] = ratios.css('td')[3].text.gsub(/[^.\/0-9A-Za-z]/, '')
+            hash_financial_y_last['head'] = ratios.css('td')[4].text.gsub(/[^.\/0-9A-Za-z]/, '')
+          elsif index_ratios > 3
+            arrName.push( ratios.css('td')[0].text )
+            tempName = ratios.css('td')[0].text.strip
+            hash_financial_q[tempName] = ratios.css('td')[1].text
+            hash_financial_q_last[tempName] = ratios.css('td')[2].text
+            hash_financial_y[tempName] = ratios.css('td')[3].text
+            hash_financial_y_last[tempName] = ratios.css('td')[4].text
+          end
+        end
+      elsif index2 == 22
+        # Growth Rate
+        arrName = []
+        item2.css('tr').each_with_index do | growth_rate , index_growth_rate |
+          # puts index_growth_rate
+          # puts growth_rate
+          if index_growth_rate > 3
+            arrName.push( growth_rate.css('td')[0].text )
+            tempName = growth_rate.css('td')[0].text.strip
+            hash_financial_q[tempName] = growth_rate.css('td')[1].text
+            hash_financial_q_last[tempName] = growth_rate.css('td')[2].text
+            hash_financial_y[tempName] = growth_rate.css('td')[3].text
+            hash_financial_y_last[tempName] = growth_rate.css('td')[4].text
+          end
+        end
+      elsif index2 == 23
+        # Cash Cycle
+        arrName = []
+        item2.css('tr').each_with_index do | cash_cycle , index_cash_cycle |
+          # puts index_cash_cycle
+          # puts cash_cycle
+          if index_cash_cycle > 3
+            arrName.push( cash_cycle.css('td')[0].text )
+            tempName = cash_cycle.css('td')[0].text.strip
+            hash_financial_q[tempName] = cash_cycle.css('td')[1].text
+            hash_financial_q_last[tempName] = cash_cycle.css('td')[2].text
+            hash_financial_y[tempName] = cash_cycle.css('td')[3].text
+            hash_financial_y_last[tempName] = cash_cycle.css('td')[4].text
+          end
+        end
+
       end
       # if index2==4
       #   puts index2
@@ -199,7 +288,7 @@ doc.css('table tr').each_with_index do | item , index|
 end
 
 # puts hash
-
+puts hash_financial_q
 
 # doc.css('table tr').each_with_index do | item , index|
 #   puts index
